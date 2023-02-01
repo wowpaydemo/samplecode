@@ -30,7 +30,7 @@
                         <ul>
                             @{
                                 int paymentmethodindex = 0;
-                                int optionindex = 0; bool ccpaymentavail = false; //string imgpath = "";
+                                int optionindex = 0; 
                             }
                             @foreach (var pmethod in Model.Options)
                             {
@@ -77,11 +77,18 @@
 
                             <div class="@csscls" id="@panelid">
 
-                                @if (pmethod.CardCapture == 1 && (pmethod.PaymentType?.ToLower() == "creditcard" || pmethod.PaymentType?.ToLower() == "debitcard") && !pmethod.DisplayName.ToLower().Contains("installment"))
+                                @if (pmethod.CardCapture == 1 && (pmethod.PaymentType?.ToLower() == "creditcard" || pmethod.PaymentType?.ToLower() == "debitcard"))
                                 {
-                                    ccpaymentavail = true;
-
                                     @await Html.PartialAsync("_CCPage")
+
+                                    <!-- Creditcard method can have more cards like visa/master/amex. Based on the entered card no, the type of the card will be identified and used the correct paymentid -->
+                                    <div style="display:none;"> 
+                                        @foreach (var channel in pmethod.ChannelList)
+                                        {                                            
+                                            <input id="@channel.PaymentId" iscapturecard="1" cardtypecode="@channel.CardType.ToUpper()" name="rdocardtypes" value="@channel.PaymentId" requesttype="@pmethod.RequestMethod"
+                                            type="radio" paymenttype="creditcard" onchange="onSelectedPayment(this)" paymentid="@channel.PaymentId" paymenturl="@channel.RequestUrl" />
+                                        }
+                                    </div>
                                 }
                                 else
                                 {
@@ -96,7 +103,7 @@
 
                                                 <li id="over">
                                                     <span title="@channel.ChannelName">
-                                                        <input id="@channelid" name="paymentoptions" value="@channelid" type="radio" isInstallment="false" channelcode="@channel.ChannelCode" requesttype="@pmethod.RequestMethod" paymenttype="@pmethod.PaymentType" onchange="onSelectedPayment(this)" paymentid="@channel.PaymentId" paymenturl="@channel.RequestUrl" />
+                                                        <input id="@channelid" name="paymentoptions" value="@channelid" type="radio" channelcode="@channel.ChannelCode" requesttype="@pmethod.RequestMethod" paymenttype="@pmethod.PaymentType" onchange="onSelectedPayment(this)" paymentid="@channel.PaymentId" paymenturl="@channel.RequestUrl" />
 
                                                         <label for="@channelid" style="text-align:center">
 
@@ -146,4 +153,75 @@
 
     }
 
+    function IdentifyCardType(cardno) {
+
+        let cardtype = '';
+        let cno = cardno.value;
+        let cvv = document.getElementById("Cvv");
+
+        if (/^5[0-5]/.test(cno) || /^2[2-7]/.test(cno)) {//master
+            //(/^(5[1-5]|2[3-6]|222[1-9]|270|271|2720)/.test(cno))
+
+            cardno.maxLength = 19;
+            cvv.maxLength = 3;        
+            cardtype = 'master';
+        }
+        else if (/^4/.test(cno) || /^9/.test(cno)) {//visa
+
+            cardno.maxLength = 19;
+            cvv.maxLength = 3;            
+            cardtype = 'visa';
+        }
+        else if (/^3[47]/.test(cno)) {//amex
+
+            cardno.maxLength = 18;
+            cvv.maxLength = 4;       
+            cardtype = 'amex';
+            
+        } else if (/^35(2[89]|[3-8][0-9])/.test(cno)) {//jcb
+
+            cardno.maxLength = 19;
+            cvv.maxLength = 3;     
+            cardtype = 'jcb';            
+        }
+        else{
+            return false;
+        } 
+        
+        return SetSelectedCard(cardtype);
+        
+    }
+
+
+    function SetSelectedCard(cardtype) {
+
+        //debugger;
+
+
+        let isvalid = false;
+        let cardtypes = document.getElementsByName("rdocardtypes");
+
+        for (let j = 0; j < cardtypes.length; j++) {
+
+            if (cardtypes[j].getAttribute("cardtypecode") == cardtype.toUpperCase()) {
+                $('#PaymentId').val(cardtypes[j].getAttribute("paymentid"));
+                $('#PaymentUrl').val(cardtypes[j].getAttribute("paymenturl"));
+                $('#PaymentType').val(cardtypes[j].getAttribute("paymenttype"));
+                $('#Requesttype').val(cardtypes[j].getAttribute("requesttype"));
+                
+                isvalid = true;
+                break;
+            }
+        }
+
+        if (!isvalid) {
+            document.getElementById("PaymentId").value = '';
+            document.getElementById("PaymentUrl").value = '';
+        }
+        else {
+
+        }
+
+        return isvalid;
+    }
 </script>

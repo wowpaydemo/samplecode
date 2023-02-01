@@ -1,4 +1,86 @@
 ﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
+<div width="100%">
+
+    <div id="card_details">
+        <div class="box-title">
+            <h4 style="text-transform:none">Credit / Debit card information</h4>
+        </div>
+        <div id="creditcarddetail">
+            <div>
+
+
+
+                    <div class="clm2">
+                        <div class="form-group">
+                            <label>Name on the card<em class="txtred">*</em></label>
+                            <input type="text" maxlength="35" class="form-control text-uppercase" id="NameontheCard" name="NameontheCard" autocomplete="off"
+                                placeholder="Name on the card">
+                            <span id="invalidcardnameerr" class="err_red hide clsInvalidCard"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Card number<em class="txtred">*</em> </label>
+                            <input type="text" maxlength="20" id="CardNo" name="CardNo" class="form-control cardnumber invalid" onpaste="return false;"
+                               autocomplete="off" placeholder="Card number" onkeydown="javascript:IdentifyCardType(this)" />
+                            <span id="invalidcardnoerr" class="err_red hide"> Card not supported</span>
+                        </div>
+                    </div>
+
+                    <div class="clm2">
+                        <div class="form-group">
+                            <div>
+                                <label>Expiry Date<em class="txtred">*</em></label>
+                                <div class="double">
+                                    <select class="form-control" name="ExpMonth" id="ExpMonth" >
+                                        <option value="01">January</option>
+                                        <option value="02">February</option>
+                                        <option value="03">March</option>
+                                        <option value="04">April</option>
+                                        <option value="05">May</option>
+                                        <option value="06">June</option>
+                                        <option value="07">July</option>
+                                        <option value="08">August</option>
+                                        <option value="09">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                    <select class="form-control" name="ExpYear" id="ExpYear">
+                                        @for (int i = 0; i < 25; i++)
+                                        {
+                                            int year = i + DateTime.Now.Year;
+                                            <option value="@year">@year</option>
+                                        }
+
+                                    </select>
+                                </div>
+                                <span id="invalidexpiryerr" class="err_red hide clsInvalidCard"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <label class="inputleft">Cvv<em class="txtred">*</em></label>
+                                <input type="password" id="Cvv" name="Cvv" maxlength="3" autocomplete="off" class="form-control" onpaste="return false;" placeholder="cvv">
+                                <span id="invalidcardcvverr" class="err_red hide clsInvalidCard"></span>
+                            </div>
+                        </div>
+                    </div>
+                
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="right divCreditImg">
+    
+    <p>Your card information is secure</p>
+    
+    <img src="~/images/logo_jcb.png" />
+    <img src="~/images/logo_verified.png" />
+    <img src="~/images/logo_master.png" />    
+
+</div>
+
+
+<div class="clearfix"></div>

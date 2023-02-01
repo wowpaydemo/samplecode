@@ -106,7 +106,7 @@ namespace DirectApiIntegration.Controllers
                         Address = "street1",
                         PostCode = "630098",
                         City = "Singapore",
-                        Country = "Singapore"
+                        Country = "SG"
                     }
                 },
                 DeviceInfo = new DeviceInfo
