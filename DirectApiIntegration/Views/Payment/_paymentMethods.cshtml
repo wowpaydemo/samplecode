@@ -1,0 +1,149 @@
+﻿@model Utility.Models.PaymentOptionRs
+
+@{
+    string selecturpayment = "Select your preferred payment option";
+    string pleaseselectyour = "Please select your";
+
+
+
+}
+
+<div id="payment_method" class="box-holder">
+
+    @if (Model?.Options?.Count > 0)
+    {
+        <div class="box-title">
+            <h4 style="text-transform:none">@selecturpayment</h4>
+        </div>
+
+        <div class="box-content">
+            <div class="bg-white sidetab">
+                <div id="UpdatePanel1">
+                    <input type="hidden" name="SelectedPaymentType" id="SelectedPaymentType" />
+                    <input type="hidden" name="SelectedChannel" id="SelectedChannel" />
+                    <input type="hidden" name="IsInstallment" id="IsInstallment" />
+                    <input type="hidden" name="SelectedOption" id="SelectedOption" />
+                    <input type="hidden" name="IsCaptureCard" id="IsCaptureCard" />
+
+
+                    <div class="tabs">
+                        <ul>
+                            @{
+                                int paymentmethodindex = 0;
+                                int optionindex = 0; bool ccpaymentavail = false; //string imgpath = "";
+                            }
+                            @foreach (var pmethod in Model.Options)
+                            {
+                                string panelid = $"#paneltabid{pmethod.PaymentOptionId}";
+
+                                string activecls = "";
+
+                                if (paymentmethodindex == 0)
+                                {
+                                    activecls = "active";
+                                }
+
+                                <li class="@activecls">
+                                    <span>
+                                        <div>
+                                            <a data-toggle="tab" href="@panelid" optionid="@pmethod.PaymentOptionId" iscapturecard="@pmethod.CardCapture" paymenttype="@pmethod.PaymentType.ToLower()" displayname="@pmethod.DisplayName" onclick="kamootapayment.onChangePaymentMethod(this)">
+                                                <label>
+
+                                                    @pmethod.DisplayName
+
+                                                </label>
+                                            </a>
+                                        </div>
+                                    </span>
+                                    <input type="hidden" value="13" />
+                                </li>
+
+                                paymentmethodindex++;
+                            }
+                        </ul>
+
+                    </div>
+
+
+                    <div class="tab-content">
+
+                        @foreach (var pmethod in Model.Options)
+                        {
+                            string panelid = $"paneltabid{pmethod.PaymentOptionId}";
+
+                            string csscls = optionindex == 0 ? "tab-panel active" : "tab-panel";
+
+                            optionindex++;
+
+                            <div class="@csscls" id="@panelid">
+
+                                @if (pmethod.CardCapture == 1 && (pmethod.PaymentType?.ToLower() == "creditcard" || pmethod.PaymentType?.ToLower() == "debitcard") && !pmethod.DisplayName.ToLower().Contains("installment"))
+                                {
+                                    ccpaymentavail = true;
+
+                                    @await Html.PartialAsync("_CCPage")
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        <h5>@pleaseselectyour @pmethod.DisplayName)</h5>
+                                        <ul>
+
+                                            @foreach (var channel in pmethod.ChannelList)
+                                            {
+                                                string channelid = @channel.PaymentId.Split('@')[1];
+
+                                                <li id="over">
+                                                    <span title="@channel.ChannelName">
+                                                        <input id="@channelid" name="paymentoptions" value="@channelid" type="radio" isInstallment="false" channelcode="@channel.ChannelCode" requesttype="@pmethod.RequestMethod" paymenttype="@pmethod.PaymentType" onchange="onSelectedPayment(this)" paymentid="@channel.PaymentId" paymenturl="@channel.RequestUrl" />
+
+                                                        <label for="@channelid" style="text-align:center">
+
+                                                            <img class="img-responsive" src="@channel.ImageUrl" alt="@channel.ChannelName" style="border-bottom: 1px solid #cecece;height:60px;width:60px;margin-bottom:10px" />
+                                                            @*style="border-bottom: 1px solid #cecece;height:60px;width:60px;margin-bottom:10px"*@
+                                                            <span style="color:#01437d">@channel.ChannelName</span>
+
+                                                        </label>
+                                                    </span>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    }
+                                    catch //(Exception ex)
+                                    {
+
+                                    }
+                                }
+
+                            </div>
+                        }
+
+
+                        <input id="PaymentId" type="hidden" value="" name="PaymentId" />
+                        <input id="PaymentType" type="hidden" value="" name="PaymentType" />
+                        <input id="PaymentUrl" type="hidden" value="" name="PaymentUrl" />
+                        <input id="Requesttype" type="hidden" value="" name="Requesttype" />
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+<script type="text/javascript">
+
+    function onSelectedPayment(target) {
+
+        $('#PaymentType').val(target.getAttribute("PaymentType"));
+        $('#Requesttype').val(target.getAttribute("requesttype"));
+        $('#PaymentId').val(target.getAttribute("paymentid"));
+        $('#PaymentUrl').val(target.getAttribute("paymenturl"));        
+
+    }
+
+</script>

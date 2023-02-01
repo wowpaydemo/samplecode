@@ -1,0 +1,32 @@
+﻿@using Utility.Models;
+
+@{
+    Layout = null;
+}
+@model SubmitPayment
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DoPayment</title>
+</head>
+<body>
+    @if (Model != null && !string.IsNullOrWhiteSpace(Model.PaymentUrl) && Model.ParameterCollection?.Count > 0)
+    {
+        <form id="frmsubmit" method="post" action="@Model.PaymentUrl">
+
+            @foreach (var dict in Model.ParameterCollection)
+            {
+                <input type="hidden" id="@dict.Key" name="@dict.Key" value="@dict.Value" />
+            }
+
+        </form>
+        <script type="text/javascript">
+            document.getElementById("frmsubmit").submit();
+        </script>
+    }
+
+</body>
+</html>

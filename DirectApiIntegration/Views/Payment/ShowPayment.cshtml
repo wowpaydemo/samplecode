@@ -1,0 +1,141 @@
+﻿@{
+    Layout = null;
+}
+@model Utility.Models.PaymentOptionRs
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta name="viewport" content="width=device-width" />
+    <title>Payment Methods</title>
+
+    <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-theme.css" rel="stylesheet" />
+
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery-migrate-3.0.1.min.js"></script>
+
+    <script src="~/js/bootstrap.js"></script>
+
+    <link href="~/css/Layout_style.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/fonts.css" rel="stylesheet" />
+
+    <link href="~/css/slider.css" rel="stylesheet" />
+    <script src="~/js/bootstrap-slider.js"></script>
+
+</head>
+<body>
+    <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+        <div class="py-container">
+
+            <header>
+                <div class="container">
+                    <div class="divLogoHeader">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a class="logo" href="#" style="margin-top:20px;margin-bottom:15px;">
+                                    <img src="~/assets/images/logo-clr.png" alt="wowpay" style="width:145px !important">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+
+            <section id="wrapper">
+
+                <div class="breadcrumbnav">
+                    <div class="container">
+                        <div class="row">
+                            <div class="paymentpg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="container gap20">
+                    <form action="/Payment/DoPayment" method="post">
+
+                        <div>
+                            <div class="row">
+                                <div class="col-md-9 col-xs-12 col-sm-12">
+
+                                    @await Html.PartialAsync("_paymentMethods", Model)
+
+                                    <hr>
+                                    <div style="visibility: hidden;" class="book_goback">
+                                        <input type="submit" name="btnGoBackToProduct" value="Select Other Fares" class="but-proceed2">
+                                    </div>
+                                    <div id="divFlightBooking">
+                                    </div>
+                                </div>
+                                <div class="col-md-3  col-xs-12 col-sm-12 no-padding sticky ">
+
+                                    <div id="price_summary" class="panel panel-default" style="top: 0px;">
+                                        <div class="panel-heading">
+                                            <h4>
+                                                Pricing Summary
+                                            </h4>
+                                        </div>
+
+                                        <div class="panel-body" id="divPricingSummary">
+
+                                            <h4>
+                                                Demo Order
+                                            </h4>
+                                            <div>
+                                                <ul class="price_list price-bot">
+                                                    <li class="odd dff">
+                                                        <span><label>Order Amount</label></span>
+                                                        <label class="rfloat"><small> </small><em class="prc1">SGD</em> <em class="prc2">825.00</em></label>
+                                                    </li>
+                                                    <li class="odd dff">
+                                                        <span><label>Total Amount</label></span>
+                                                        <label class="rfloat"><small> </small><em class="prc1">SGD</em> <em class="prc2">825.00</em></label>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div id="divFlightBooking">
+                                        <input type="submit" name="btnMakePayment" value="Pay" id="btnMakePayment" style="width:100%" onclick="kamootapayment.onMakingPayment()" class="btn btn-primary btn-lg pull-right">
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+                </div>
+
+            </section>
+
+
+            <div class="footerbg">
+                <footer>
+                    <div class="bot-footer">
+                        <div class="container">
+                            <div class="row nominer">
+                                <div class="col-md-5 col-xs-12 col-sm-12 padding-zero">
+                                    <h6 class=""> © wowpay.io. All rights reserved.</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+
+        </div>
+
+    </body>
+</body>
+</html>
