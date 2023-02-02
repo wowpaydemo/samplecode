@@ -6,7 +6,7 @@ namespace DirectApiIntegration.Controllers
 {
     public class PaymentController : Controller
     {
-		private static string Currency = "MYR";
+		private static string Currency = "SGD";
 
 		public async Task<IActionResult> ShowPayment()
         {
